@@ -179,6 +179,22 @@ class Parser
     }
 
     /**
+     * @param string $dateTime
+     * @return \DateTimeImmutable|null
+     */
+    public static function parseDateTimePST(string $dateTime) : ?\DateTimeImmutable
+    {
+        try{
+            $malTimeZone = new \DateTimeZone('America/Los_Angeles'); //
+            $parsedDateTime = new \DateTimeImmutable($dateTime,$malTimeZone);
+            return $parsedDateTime->setTimezone(new \DateTimeZone('UTC'));
+        }
+        catch (\Exception $e){
+            return null;
+        }
+    }
+
+    /**
      * @param Crawler $crawler
      *
      * @return null|string

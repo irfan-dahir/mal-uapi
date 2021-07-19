@@ -42,7 +42,7 @@ class UserProfileParser
         return Model\User\Profile::fromParser($this);
     }
 
-    public function getUserId() : ?int
+    public function getUserId(): ?int
     {
         $node = $this->crawler->filterXPath("//a[contains(@class, 'header-right')]");
         if (!$node->count()) {
@@ -52,7 +52,7 @@ class UserProfileParser
         preg_match('#id=(.*)#', $node->attr('href'), $id);
 
         if (!empty($id)) {
-            return (int) $id[1];
+            return (int)$id[1];
         }
 
         return null;
@@ -108,15 +108,9 @@ class UserProfileParser
      */
     public function getLastOnline(): ?\DateTimeImmutable
     {
-        try {
-            return new \DateTimeImmutable(
-                $this->crawler->filterXPath('//span[contains(text(), \'Last Online\')]/following-sibling::span')
-                    ->text(),
-                new \DateTimeZone('UTC')
-            );
-        } catch (\Exception $e) {
-            return null;
-        }
+        return Parser::parseDateTimePST(
+            $this->crawler->filterXPath('//span[contains(text(), \'Last Online\')]/following-sibling::span')
+            ->text());
     }
 
     /**
